@@ -1,0 +1,15 @@
+build/
+*.bin
+*.iso
+*.img
+*.elf
+*.log
+*.o
+*.out
+*.class
+*.exe
+*.dll
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
