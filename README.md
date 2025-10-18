@@ -13,3 +13,4 @@ Run in the root of the repo:
 chmod +x ./run.sh
 ./run.sh
 ```
+> **Note:** I am still working on cross platform compiling so these may change fast although I will try to keep it the same 
