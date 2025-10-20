@@ -1,1 +1,2 @@
-make buildBin
+make
+make run
