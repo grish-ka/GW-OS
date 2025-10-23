@@ -7,7 +7,7 @@ OBJ = ${C_SOURCES:.c=.o}
 CC = gcc
 GDB = gdb
 # -g: Use debugging symbols in gcc
-CFLAGS = -g
+CFLAGS = -g -m32 -fno-pie
 
 # First rule is run by default
 os-image.bin: boot/bootsect.bin kernel.bin
@@ -16,11 +16,11 @@ os-image.bin: boot/bootsect.bin kernel.bin
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
 kernel.bin: boot/kernel_entry.o ${OBJ}
-	ld -o $@ -Ttext 0x1000 $^ --oformat binary
+	ld -m elf_i386 -o $@ -Ttext 0x1000 $^ --oformat binary
 
 # Used for debugging purposes
 kernel.elf: boot/kernel_entry.o ${OBJ}
-	ld -o $@ -Ttext 0x1000 $^ 
+	ld -m elf_i386 -o $@ -Ttext 0x1000 $^ 
 
 run: os-image.bin
 	qemu-system-i386 -fda os-image.bin
@@ -36,7 +36,7 @@ debug: os-image.bin kernel.elf
 	${CC} ${CFLAGS} -ffreestanding -c $< -o $@
 
 %.o: %.asm
-	nasm $< -f elf64 -o $@
+	nasm $< -f elf -o $@
 
 %.bin: %.asm
 	nasm $< -f bin -o $@
