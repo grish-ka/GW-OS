@@ -51,6 +51,40 @@ debug: os-image.bin kernel.elf
 	qemu-system-i386 -s -fda os-image.bin &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
+# --- NEW RULE ---
+# Flashes the OS image to a USB drive.
+# This is DANGEROUS. Make sure you know which device is your USB!
+flash-usb: os-image.bin
+	@echo "--- WARNING! THIS WILL DESTROY ALL DATA ON THE SELECTED DRIVE ---"
+	@echo "Please identify your USB drive from the list below."
+	@echo "Common USB drives are /dev/sdb, /dev/sdc, etc."
+	@echo "DO NOT select your main drive (e.g., /dev/sda or /dev/nvme0n1)!"
+	@lsblk -d -o NAME,SIZE,MODEL
+	@echo -n "Enter the device path (e.g., /dev/sdc): "
+	@read DRIVE; \
+	if [ -z "$$DRIVE" ]; then \
+		echo "No drive selected. Aborting."; \
+		exit 1; \
+	fi; \
+	echo "About to flash os-image.bin to $$DRIVE..."; \
+	echo "This is your final chance. Press Ctrl+C to cancel, or Enter to continue."; \
+	read -r; \
+	echo "Flashing... (sudo may ask for your password)"; \
+	sudo dd if=os-image.bin of=$$DRIVE bs=4M status=progress conv=fdatasync; \
+	echo "Flash complete!"; \
+	echo -n "Would you like to eject $$DRIVE? (y/n) "; \
+	read EJECT; \
+	case "$$EJECT" in \
+		y|Y) \
+			echo "Ejecting $$DRIVE... (sudo may ask for your password again)"; \
+			sudo eject $$DRIVE; \
+			echo "$$DRIVE ejected."; \
+			;; \
+		*) \
+			echo "Skipping eject. Please unmount/eject manually before removing."; \
+			;; \
+	esac
+
 # --- GENERIC RULES ---
 
 # Compile C files
@@ -69,4 +103,6 @@ boot/bootsect.bin: boot/bootsect.asm
 clean:
 	rm -rf *.bin *.dis *.o os-image.bin *.elf
 	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o
+
+
 
