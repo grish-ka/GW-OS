@@ -4,10 +4,10 @@ HEADERS = $(wildcard kernel/*.h drivers/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 
 # Change this if your cross-compiler is somewhere else
-CC = gcc
+CC = arm-linux-gnueabihf-gcc
 GDB = gdb
 # -g: Use debugging symbols in gcc
-CFLAGS = -g -m32 -fno-pie
+CFLAGS = -g
 
 # First rule is run by default
 os-image.bin: boot/bootsect.bin kernel.bin
@@ -43,4 +43,4 @@ debug: os-image.bin kernel.elf
 
 clean:
 	rm -rf *.bin *.dis *.o os-image.bin *.elf
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o201620162016
