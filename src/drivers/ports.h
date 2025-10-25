@@ -1,11 +1,24 @@
-#ifndef PORTS_H
-#define PORTS_H
+#ifndef DRIVERS_PORTS_H
+#define DRIVERS_PORTS_H
 
-#include "../cpu/types.h"
+/*
+ * Reads a byte from the specified I/O port.
+ */
+unsigned char port_byte_in(unsigned short port);
 
-unsigned char port_byte_in (u16 port);
-void port_byte_out (u16 port, u8 data);
-unsigned short port_word_in (u16 port);
-void port_word_out (u16 port, u16 data);
+/*
+ * Writes a byte to the specified I/O port.
+ */
+void port_byte_out(unsigned short port, unsigned char data);
 
-#endif
+/*
+ * Reads a 16-bit word from the specified I/O port.
+ */
+unsigned short port_word_in(unsigned short port);
+
+/*
+ * Writes a 16-bit word to the specified I/O port.
+ */
+void port_word_out(unsigned short port, unsigned short data);
+
+#endif /* DRIVERS_PORTS_H */
