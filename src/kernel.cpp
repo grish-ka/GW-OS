@@ -1,5 +1,5 @@
 extern "C" void main(){
-    *(char*)0xb8000 = 'Q';
-    *(int*)0xb8001 = 9;
-    return;
+    volatile unsigned short *vga = (unsigned short*)0xB8000;
+    vga[0] = ('Q' | (9 << 8)); // char plus attribute in high byte
+    for(;;) asm volatile("hlt");
 }
